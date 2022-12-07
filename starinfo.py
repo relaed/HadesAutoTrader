@@ -4,7 +4,7 @@ import pyperclip
 import pytesseract
 import re
 import regions
-
+import speach
 
 p = re.compile(r'([\d., -]+)', re.IGNORECASE)
 storedCredits = 0
@@ -15,10 +15,12 @@ creditsCap = 0
 hydroCap = 0
 
 def loadStarInfo():
+    speach.speak('Collecting star info')
     toggleChatWindow(False)
 
     collectData()
     printData()
+    writeToStarSystem()
 
 def writeToStarSystem():
     toggleChatWindow(True)
@@ -112,3 +114,18 @@ def toggleStarInfoWindow(state):
 
 
 
+def zoom():
+    speach.speak('Positioning the star')
+    pyautogui.keyDown('-')
+    pyautogui.keyDown('Down')
+    pyautogui.keyDown('Right')
+    time.sleep(3)
+    pyautogui.keyUp('-')
+    pyautogui.keyUp('Down')
+    pyautogui.keyUp('Right')
+
+    pyautogui.moveTo(680, 60)
+
+    pyautogui.keyDown('=')
+    time.sleep(1.6)
+    pyautogui.keyUp('=')
