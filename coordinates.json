@@ -1,0 +1,96 @@
+[
+  {
+    "system": "relaed",
+    "planets": [
+      {
+        "name": "W1-Blanhis",
+        "x": 666,
+        "y": 448,
+        "warp": true,
+        "dump": true
+      },
+      {
+        "name": "W-Sonaus",
+        "x": 225,
+        "y": 825,
+        "warp": true
+      },
+      {
+        "name": "W-Plet",
+        "x": 1080,
+        "y": 840,
+        "warp": true
+      },
+      {
+        "name": "W1-Hamsel",
+        "x": 555,
+        "y": 670,
+        "warp": true
+      },
+      {
+        "name": "W-Alie",
+        "x": 850,
+        "y": 385,
+        "warp": true
+      },
+      {
+        "name": "W-Annegrit",
+        "x": 710,
+        "y": 105,
+        "warp": true
+      },
+      {
+        "name": "W-Baroth",
+        "x": 425,
+        "y": 315,
+        "warp": true
+      },
+      {
+        "name": "TS-Rietumi",
+        "x": 605,
+        "y": 420,
+        "offload": true
+      },
+      {
+        "name": "TS-Ziemeli",
+        "x": 650,
+        "y": 365
+      },
+      {
+        "name": "TS-Austrumi",
+        "x": 850,
+        "y": 460
+      },
+      {
+        "name": "Nandina",
+        "x": 810,
+        "y": 190
+      },
+      {
+        "name": "Abra",
+        "x": 550,
+        "y": 550
+      },
+      {
+        "name": "Kahiko",
+        "x": 830,
+        "y": 850
+      },
+      {
+        "name": "Bifora",
+        "x": 950,
+        "y": 620
+      },
+      {
+        "name": "Branthorn",
+        "x": 580,
+        "y": 1015
+      },
+      {
+        "name": "Zizia",
+        "x": 270,
+        "y": 670
+      }
+    ]
+  }
+]

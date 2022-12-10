@@ -14,13 +14,14 @@ import speach
 import starinfo
 from pynput import keyboard
 from pathlib import Path
+import json
 
 
 takeCommand = False
+alive = True
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    # print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def startup():
+    global alive
     #currentHydro = 10123456
     #currentHydro = round(currentHydro / 1000)
     #print(f'{currentHydro:,}')
@@ -29,13 +30,15 @@ def print_hi(name):
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
 
+    starinfo.loadCoordinates()
+
     speach.speak('Hades AutoTrader online.')
-    while True:
-        time.sleep(10)
+    while alive:
+        time.sleep(1)
 
 
 def on_press(key):
-    global takeCommand
+    global takeCommand, alive
     try:
         key.char
         if takeCommand:
@@ -44,6 +47,17 @@ def on_press(key):
                 starinfo.zoom()
             elif key.char == 'u':
                 starinfo.loadStarInfo()
+            elif key.char == 't':
+                starinfo.activateTransports()
+            elif key.char == 'w':
+                starinfo.routeCurrentToWarps()
+            elif key.char == 'n':
+                starinfo.routeCurrentToNonWarps()
+            elif key.char == 'd':
+                starinfo.printDistancesToPlanets('TS7')
+            elif key.char == 'q':
+                speach.speak('Bye')
+                alive = False
             else:
                 speach.speak('Command unknown')
     except AttributeError:
@@ -51,30 +65,10 @@ def on_press(key):
             takeCommand = True
 
 
-def clickityClick():
-    # pytesseract.pytesseract.tesseract_cmd = '%userprofile%\\AppData\\Local\\Tesseract-OCR\\tesseract.exe'
-    pytesseract.pytesseract.tesseract_cmd = 'C:\\Users\\daini\\AppData\\Local\\Tesseract-OCR\\tesseract.exe'
-
-    time.sleep(2)
-    screenWidth, screenHeight = pyautogui.size()
-    print(f'w {screenWidth}, h {screenHeight}')
-
-
-    # pyautogui.moveTo(100, 150)
-    # pyautogui.click()
-
-    # starinfo.loadStarInfo()
-    # starinfo.writeToStarSystem()
-
-
-    # pyautogui.hotkey('ctrl', 'c')
-
-
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-    # clickityClick()
+    startup()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
 
