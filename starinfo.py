@@ -1,11 +1,17 @@
 import json
 import time
+
+import PIL
+import cv2
+import numpy
 import pyautogui
 import pyperclip
 import pytesseract
 import re
 import regions
+import screen
 import speach
+from PIL import Image, ImageOps, ImageEnhance
 
 p = re.compile(r'([\d., -]+)', re.IGNORECASE)
 storedCredits = 0
@@ -18,6 +24,7 @@ coordinates = None
 warps = None
 nonWarps = None
 dump = None
+transportsPosition = []
 
 
 def loadCoordinates():
@@ -199,9 +206,7 @@ def toggleStarInfoWindow(state):
 
 
 def toggleShipsListWindow(state):
-    color = pyautogui.pixel(1652, 592)
-    print(f' color {color} ')
-    if (color[0] == 125 and color[1] == 180 and color[2] == 200):
+    if pyautogui.pixelMatchesColor(1652, 592, (125, 180, 200), tolerance=1):
         if not state:
             pyautogui.press('space')
     elif state:
@@ -209,30 +214,71 @@ def toggleShipsListWindow(state):
 
 
 def activateTransports():
-    speach.speak('Locating transports')
+    global transportsPosition
+    topY = None
+    bottomY = None
+    #    speach.speak('Locating transports')
     toggleShipsListWindow(True)
+
+    im = screen.screenshot()
     y = 592
-    while (y > 200):
+    px = im.getpixel((1690, y))
+    print(px)
+    while y > 1:
         y = y - 1
-        color = pyautogui.pixel(1690, y)
-        if (color[0] == 31 and color[1] == 45 and color[2] == 48):
-            print(f'Top found at y {y}')
+        if im.getpixel((1690, y)) == 214:
+            topY = y
             break
 
-    count = 0
-    while True:
-        im = pyautogui.screenshot(region=(1725, y, 80, 32))
-        text = pytesseract.image_to_string(im).rstrip()
-        print(f'Found [{text}] at y {y}')
-        if text != 'Transport':
+    y = 592
+    while y < 1080:
+        y = y + 1
+        if im.getpixel((1690, y)) != 232:
+            bottomY = y
             break
-        pyautogui.click(1900, y + 16)
+
+    if topY is None or bottomY is None:
+        print('Coule not find ship list!')
+        exit()
+
+    im = im.crop(box=(1724, topY, 1724 + 120, bottomY))
+    im.save('cropped.jpg')
+    text = screen.getText(im)
+    print(f'crop [{screen.getText(im)}]')
+
+    transportsPosition.clear()
+
+    # quick
+    count = 0
+    for line in text.split():
+        print(f'{count} {line}')
+        if not line.startswith('TS') or ((32 * (count + 1)) + 32) >= im.height:
+            break
+        position = topY + (32 * count) + 16
+        transport = {'name': line, 'position': position}
+        transportsPosition.append(transport)
         count = count + 1
-        y = y + 32
-    #        time.sleep(0.1)
+
+    # "Honest"
+    #     count = 0
+    #     while True:
+    #         crop = im.crop(box=(0, 32 * count, im.width, (32 * count) + 32))
+    #         crop.save('src.jpg')
+    #         text = screen.getText(crop)
+    #
+    #         position = topY + (32 * count) + 16
+    #         print(f'Found [{text}] at y {position}')
+    #
+    #         if not text.startswith('TS') or ((32 * (count + 1)) + 32) >= im.height:
+    #             break
+    #
+    #         transport = {'name': text, 'position': position}
+    #         transportsPosition.append(transport)
+    # #        pyautogui.click(1900, position)
+    #         count = count + 1
 
     speach.speak(f'{count} transports found')
-    # step 32 px
+    # step 32
 
 
 def zoom():

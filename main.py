@@ -18,6 +18,7 @@ import json
 
 
 takeCommand = False
+subCommand = None
 alive = True
 
 def startup():
@@ -38,24 +39,33 @@ def startup():
 
 
 def on_press(key):
-    global takeCommand, alive
+    global takeCommand, subCommand, alive
     try:
-        key.char
+        ch = key.char.lower()
         if takeCommand:
             takeCommand = False
-            if key.char == 'z':
+            if subCommand is not None:
+                subCommand = None
+                if ch == '1':
+                    print('SubAction 1')
+                else:
+                    print('Unknown SubAction')
+            elif ch == 'z':
                 starinfo.zoom()
-            elif key.char == 'u':
+            elif ch == 'u':
                 starinfo.loadStarInfo()
-            elif key.char == 't':
+            elif ch == 't':
                 starinfo.activateTransports()
-            elif key.char == 'w':
+            elif ch == 'w':
                 starinfo.routeCurrentToWarps()
-            elif key.char == 'n':
+            elif ch == 'n':
                 starinfo.routeCurrentToNonWarps()
-            elif key.char == 'd':
+            elif ch == 'd':
                 starinfo.printDistancesToPlanets('TS7')
-            elif key.char == 'q':
+            elif ch == 'e':
+                takeCommand = True
+                subCommand = ch
+            elif ch == 'q':
                 speach.speak('Bye')
                 alive = False
             else:
